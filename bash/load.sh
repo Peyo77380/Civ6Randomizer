@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source variables.sh
+source goToBegetCommand.sh
 
-git ftp push &&
-sshpass -p $PSWD ssh $USER:@$SERVER "cd ${SERVER_PATH} && php7.2 bin/console cache:clear && exit"
+COMMANDLOAD="php7.2 bin/console cache:clear"
+productionAction $COMMANDLOAD
