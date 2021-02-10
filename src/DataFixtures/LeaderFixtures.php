@@ -4,7 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Leader;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 
 class LeaderFixtures extends Fixture
 {
