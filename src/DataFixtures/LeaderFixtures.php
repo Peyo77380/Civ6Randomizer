@@ -3,14 +3,18 @@
 namespace App\DataFixtures;
 
 use App\Entity\Leader;
+use App\Entity\LeaderTranslate;
+use App\DataFixtures\LanguageFixtures;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
-class LeaderFixtures extends Fixture
+
+class LeaderFixtures extends Fixture implements DependentFixtureInterface
 {
     const LEADERS = [
-      ['country' => 'Маори', 'name' => 'Купе', 'image' => 'civ6-gs-civilization-maori'],
-      ['country' => 'Венгрия', 'name' => 'Матвей I Корвин',  'image' => 'civ6-gs-civilization-hungary'],
+      ['country' => ['RU' =>'Маори'], 'name' => ['RU' =>'Купе'], 'image' => 'civ6-gs-civilization-maori'],
+      /*['country' => 'Венгрия', 'name' => 'Матвей I Корвин',  'image' => 'civ6-gs-civilization-hungary'],
       ['country' => 'Канада', 'name' => 'Вильфрид Лорье',  'image' => 'civ6-gs-civilization-canada'],
       ['country' => 'Инки', 'name' => 'Пачакутек',  'image' => 'civ6-gs-civilization-inca'],
       ['country' => 'Мали', 'name' => 'Манса Муса',  'image' => 'civ6-gs-civilization-mali'],
@@ -39,20 +43,66 @@ class LeaderFixtures extends Fixture
       ['country' => 'Франция', 'name' => 'Екатерина Медичи',  'image' => 'CivilizationVI_France_Catherine'],
       ['country' => 'Шумеры', 'name' => 'Гильгамеш',  'image' => 'Civ6_Sumerian_Gilgamesh'],
       ['country' => 'Япония', 'name' => 'Ходзё Токимунэ',  'image' => 'civ6_tokimune1'],
-      ['country' => 'Польща', 'name' => 'Ядвига',  'image' => 'jadwiga'],
+      ['country' => 'Польща', 'name' => 'Ядвига',  'image' => 'jadwiga'],*/
     ];
+
+
+
 
     public function load(ObjectManager $manager)
     {
+
+        
         foreach (LeaderFixtures::LEADERS as $head) {
-             $leader = new Leader();
-             $leader->setName($head['name']);
-             $leader->setCountry($head['country']);
-             $leader->setImage($head['image'] . '.jpg');
-             $leader->setGamesCount(0);
-             $manager->persist($leader);
-        }
+            $leader = new Leader();
+
+            $leader->setImage($head['image'] . '.jpg');
+            $leader->setGamesCount(0);
+            $leader->setName($head['name']['RU']);
+            $leader->setCountry($head['country']['RU']);
+
+            $manager->persist($leader);
+
+            
+
+            $leaderTranslateRU = new LeaderTranslate();
+            
+            $leaderTranslateRU->setName($head['name']['RU']);
+            $leaderTranslateRU->setCountry($head['country']['RU']);
+            $leaderTranslateRU->setLeader($leader);
+            $leaderTranslateRU->setLanguage($this->getReference(LanguageFixtures::LANG_RU_REFERENCE));
+
+
+            $leaderTranslateEN = new LeaderTranslate();
+
+            $leaderTranslateEN->setName($head['name']['RU']);
+            $leaderTranslateEN->setCountry($head['country']['RU']);
+            $leaderTranslateEN->setLeader($leader);
+            $leaderTranslateEN->setLanguage($this->getReference(LanguageFixtures::LANG_EN_REFERENCE));
+
+
+            $leaderTranslateFR = new LeaderTranslate();
+
+            $leaderTranslateFR->setName($head['name']['RU']);
+            $leaderTranslateFR->setCountry($head['country']['RU']);
+            $leaderTranslateFR->setLeader($leader);
+            $leaderTranslateFR->setLanguage($this->getReference(LanguageFixtures::LANG_FR_REFERENCE));
+            
+            $manager->persist($leaderTranslateRU);
+            $manager->persist($leaderTranslateEN);
+            $manager->persist($leaderTranslateFR);
+
+          
+        };
 
         $manager->flush();
     }
+
+    public function getDependencies()
+    {
+      return array(
+        LanguageFixtures::class,
+      );
+    }
+    
 }
