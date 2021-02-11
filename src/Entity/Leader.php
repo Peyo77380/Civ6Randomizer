@@ -43,9 +43,15 @@ class Leader
      */
     private $gamesCount;
 
+    /**
+     * @ORM\OneToMany(targetEntity=LeaderTranslate::class, mappedBy="leader", orphanRemoval=true)
+     */
+    private $leaderTranslates;
+
     public function __construct()
     {
         $this->games = new ArrayCollection();
+        $this->leaderTranslates = new ArrayCollection();
     }
 
 
@@ -141,6 +147,36 @@ class Leader
     public function addOneGame(): self
     {
         $this->gamesCount = $this->gamesCount + 1;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|LeaderTranslate[]
+     */
+    public function getLeaderTranslates(): Collection
+    {
+        return $this->leaderTranslates;
+    }
+
+    public function addLeaderTranslate(LeaderTranslate $leaderTranslate): self
+    {
+        if (!$this->leaderTranslates->contains($leaderTranslate)) {
+            $this->leaderTranslates[] = $leaderTranslate;
+            $leaderTranslate->setLeader($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLeaderTranslate(LeaderTranslate $leaderTranslate): self
+    {
+        if ($this->leaderTranslates->removeElement($leaderTranslate)) {
+            // set the owning side to null (unless already changed)
+            if ($leaderTranslate->getLeader() === $this) {
+                $leaderTranslate->setLeader(null);
+            }
+        }
 
         return $this;
     }
