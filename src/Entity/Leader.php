@@ -19,19 +19,9 @@ class Leader
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $name;
-
-    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $image;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $country;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Game", mappedBy="leader")
@@ -60,18 +50,6 @@ class Leader
         return $this->id;
     }
 
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
     public function getImage(): ?string
     {
         return $this->image;
@@ -80,18 +58,6 @@ class Leader
     public function setImage(?string $image): self
     {
         $this->image = $image;
-
-        return $this;
-    }
-
-    public function getCountry(): ?string
-    {
-        return $this->country;
-    }
-
-    public function setCountry(string $country): self
-    {
-        $this->country = $country;
 
         return $this;
     }

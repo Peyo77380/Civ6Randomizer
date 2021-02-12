@@ -91,8 +91,6 @@ class LeaderFixtures extends Fixture implements DependentFixtureInterface
 
             $leader->setImage($head['image'] . '.jpg');
             $leader->setGamesCount(0);
-            $leader->setName($head['name']['RU']);
-            $leader->setCountry($head['country']['RU']);
 
             $manager->persist($leader);
 
