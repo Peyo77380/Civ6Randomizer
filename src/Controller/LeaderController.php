@@ -29,8 +29,9 @@ class LeaderController extends AbstractController
      */
     public function index(LeaderRepository $leaderRepository): Response
     {
+        dd( $leaderRepository->findOneBy([], [])->getLeaderTranslates());
         return $this->render('leader/index.html.twig', [
-            'leaders' => $leaderRepository->findBy([], ['country' => 'ASC']),
+            'leaders' => "blurg",
         ]);
     }
 

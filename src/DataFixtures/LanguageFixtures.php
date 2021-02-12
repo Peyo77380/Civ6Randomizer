@@ -15,9 +15,9 @@ class LanguageFixtures extends Fixture
     public const LANG_FR_REFERENCE = 'fr';
    
     public const LANGUAGES = [
-        ['name' => 'english', 'iso' => 'EN'],
-        ['name' => 'russian', 'iso' => 'RU'],
-        ['name' => 'french', 'iso' => 'FR'],
+        ['ref' => self::LANG_EN_REFERENCE, 'name' => 'english', 'iso' => 'EN'],
+        ['ref' => self::LANG_RU_REFERENCE, 'name' => 'russian', 'iso' => 'RU'],
+        ['ref' => self::LANG_FR_REFERENCE, 'name' => 'french', 'iso' => 'FR'],
     ];
 
     public function load(ObjectManager $manager)
@@ -29,23 +29,8 @@ class LanguageFixtures extends Fixture
                 ->setIso($lang['iso']);
             $manager->persist($language);
 
-            switch ($lang['iso']) 
-            {
-                case 'EN':
-                    $this->addReference(LanguageFixtures::LANG_EN_REFERENCE, $language);
-                    break;
-                case 'RU':
-                    $this->addReference(LanguageFixtures::LANG_RU_REFERENCE, $language);
-                    break;
-                case 'FR':
-                    $this->addReference(LanguageFixtures::LANG_FR_REFERENCE, $language);
-                    break;
-                default:
-                    throw new Error("Non existing language iso passed as parameter");
-                    break;
-            }
-            
-            
+            $this->addReference($lang['ref'], $language);
+    
           }
 
         $manager->flush();
