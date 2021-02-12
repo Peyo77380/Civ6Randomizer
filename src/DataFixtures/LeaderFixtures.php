@@ -13,7 +13,19 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 class LeaderFixtures extends Fixture implements DependentFixtureInterface
 {
     const LEADERS = [
-      ['country' => ['RU' =>'Маори'], 'name' => ['RU' =>'Купе'], 'image' => 'civ6-gs-civilization-maori'],
+      [
+        'country' => [
+          'RU' =>'Маори',
+          'EN' => 'Maori',
+          'FR' => 'Maori',
+        ], 
+        'name' => [
+          'RU' =>'Купе',
+          'EN' => 'Coupe',
+          'FR' => 'Coupé',
+        ],
+        'image' => 'civ6-gs-civilization-maori',
+      ],
       /*['country' => 'Венгрия', 'name' => 'Матвей I Корвин',  'image' => 'civ6-gs-civilization-hungary'],
       ['country' => 'Канада', 'name' => 'Вильфрид Лорье',  'image' => 'civ6-gs-civilization-canada'],
       ['country' => 'Инки', 'name' => 'Пачакутек',  'image' => 'civ6-gs-civilization-inca'],
@@ -47,11 +59,21 @@ class LeaderFixtures extends Fixture implements DependentFixtureInterface
     ];
 
 
-
-
     public function load(ObjectManager $manager)
     {
-
+        $ref = [];
+        $ref[] = [
+          'iso' => 'RU', 
+          'ref' => $this->getReference(LanguageFixtures::LANG_RU_REFERENCE)
+        ];
+        $ref[] = [
+          'iso' => 'EN', 
+          'ref' => $this->getReference(LanguageFixtures::LANG_EN_REFERENCE)
+        ];
+        $ref[] = [
+          'iso' => 'FR', 
+          'ref' => $this->getReference(LanguageFixtures::LANG_FR_REFERENCE)
+        ];
         
         foreach (LeaderFixtures::LEADERS as $head) {
             $leader = new Leader();
@@ -65,34 +87,21 @@ class LeaderFixtures extends Fixture implements DependentFixtureInterface
 
             
 
-            $leaderTranslateRU = new LeaderTranslate();
+            foreach ($ref as $lang) {
+              
+              
+
+              $leaderTranslate = new LeaderTranslate();
+
+              $leaderTranslate->setName($head['name'][$lang['iso']]);
+              $leaderTranslate->setCountry($head['country'][$lang['iso']]);
+              $leaderTranslate->setLeader($leader);
+              $leaderTranslate->setLanguage($lang['ref']);
+              
+              $manager->persist($leaderTranslate);
             
-            $leaderTranslateRU->setName($head['name']['RU']);
-            $leaderTranslateRU->setCountry($head['country']['RU']);
-            $leaderTranslateRU->setLeader($leader);
-            $leaderTranslateRU->setLanguage($this->getReference(LanguageFixtures::LANG_RU_REFERENCE));
-
-
-            $leaderTranslateEN = new LeaderTranslate();
-
-            $leaderTranslateEN->setName($head['name']['RU']);
-            $leaderTranslateEN->setCountry($head['country']['RU']);
-            $leaderTranslateEN->setLeader($leader);
-            $leaderTranslateEN->setLanguage($this->getReference(LanguageFixtures::LANG_EN_REFERENCE));
-
-
-            $leaderTranslateFR = new LeaderTranslate();
-
-            $leaderTranslateFR->setName($head['name']['RU']);
-            $leaderTranslateFR->setCountry($head['country']['RU']);
-            $leaderTranslateFR->setLeader($leader);
-            $leaderTranslateFR->setLanguage($this->getReference(LanguageFixtures::LANG_FR_REFERENCE));
-            
-            $manager->persist($leaderTranslateRU);
-            $manager->persist($leaderTranslateEN);
-            $manager->persist($leaderTranslateFR);
-
-          
+            }
+           
         };
 
         $manager->flush();

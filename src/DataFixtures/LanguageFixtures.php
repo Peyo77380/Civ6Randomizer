@@ -5,6 +5,7 @@ namespace App\DataFixtures;
 use App\Entity\Language;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Error;
 
 class LanguageFixtures extends Fixture
 {
@@ -12,42 +13,42 @@ class LanguageFixtures extends Fixture
     public const LANG_RU_REFERENCE = 'ru';
     public const LANG_EN_REFERENCE = 'en';
     public const LANG_FR_REFERENCE = 'fr';
-    
-    const LANGUAGES = [
+   
+    public const LANGUAGES = [
         ['name' => 'english', 'iso' => 'EN'],
         ['name' => 'russian', 'iso' => 'RU'],
         ['name' => 'french', 'iso' => 'FR'],
-      ];
+    ];
 
     public function load(ObjectManager $manager)
     {
-        // $product = new Product();
-        // $manager->persist($product);
-        // loop through langagues array
-
+        // loop through languages array
         foreach (LanguageFixtures::LANGUAGES as $lang) {
             $language = new Language();
             $language->setName($lang['name'])
                 ->setIso($lang['iso']);
             $manager->persist($language);
 
-            $languages[] = $language;
-
-            if ($lang['iso'] === 'RU') {
-              $this->addReference(self::LANG_RU_REFERENCE, $language);
+            switch ($lang['iso']) 
+            {
+                case 'EN':
+                    $this->addReference(LanguageFixtures::LANG_EN_REFERENCE, $language);
+                    break;
+                case 'RU':
+                    $this->addReference(LanguageFixtures::LANG_RU_REFERENCE, $language);
+                    break;
+                case 'FR':
+                    $this->addReference(LanguageFixtures::LANG_FR_REFERENCE, $language);
+                    break;
+                default:
+                    throw new Error("Non existing language iso passed as parameter");
+                    break;
             }
-            if ($lang['iso'] === 'EN') {
-              $this->addReference(self::LANG_EN_REFERENCE, $language);
-            }
-            if ($lang['iso'] === 'FR') {
-              $this->addReference(self::LANG_FR_REFERENCE, $language);
-            }
-
+            
+            
           }
 
-          
-          
-
         $manager->flush();
+          
     }
 }
