@@ -83,7 +83,7 @@ class LeaderFixtures extends Fixture implements DependentFixtureInterface
         ];
         $ref[] = [
           'iso' => 'FR', 
-          'ref' => $this->getReference(LanguageFixtures::LANG_FR_REFERENCE)
+          'ref' => $this->getReference(LanguageFixtures::LANG_FR_REgitFERENCE)
         ];
         
         foreach (LeaderFixtures::LEADERS as $head) {
