@@ -2,9 +2,11 @@
 
 namespace App\Repository;
 
+use App\Entity\Leader;
+use App\Entity\Language;
 use App\Entity\LeaderTranslate;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method LeaderTranslate|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,6 +21,22 @@ class LeaderTranslateRepository extends ServiceEntityRepository
         parent::__construct($registry, LeaderTranslate::class);
     }
 
+    /**
+     * @return LeaderTranslate from Leaders ID and Language
+     */
+    public function findOneByLanguage(Leader $leader, string $languageIso): ?LeaderTranslate
+    {
+        return $this->createQueryBuilder('l')
+            ->andWhere('l.leader = :leader')
+            ->andWhere('l.language = :language')
+            ->setParameter('leader', $leader)
+            ->setParameter('language', $languageIso)
+            ->getQuery()
+
+            ->getOneOrNullResult()
+            
+        ;
+    }
     // /**
     //  * @return LeaderTranslate[] Returns an array of LeaderTranslate objects
     //  */

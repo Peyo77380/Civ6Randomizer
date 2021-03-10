@@ -3,9 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Leader;
+use App\Entity\LeaderTranslate;
 use App\Form\LeaderType;
 use App\Repository\GameRepository;
+use App\Repository\LanguageRepository;
 use App\Repository\LeaderRepository;
+use App\Repository\LeaderTranslateRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,11 +30,29 @@ class LeaderController extends AbstractController
      * @param LeaderRepository $leaderRepository
      * @return Response
      */
-    public function index(LeaderRepository $leaderRepository): Response
+    public function index(LeaderRepository $leaderRepository, LeaderTranslateRepository $leaderTranslateRepository): Response
     {
-        $translation = $leaderRepository->findOneBy([], [])->getLeaderTranslates();
+        $leadersData = [];
+        $leaders = $leaderRepository->findAll();
+
+        // 80 is the id for russian
+        // TODO : change it to get the real user language's Id
+        $userLanguage = '79';
+
+        foreach ( $leaders as $leader ) {
+            
+            $translation = $this->getDoctrine()
+                ->getRepository(LeaderTranslate::class)
+                ->findOneByLanguage($leader, $userLanguage);
+            
+            $leadersData[$leader->getId()]['mainData'] = $leader ;
+            $leadersData[$leader->getId()]['localData'] = $translation;
+            
+        }
+
+
         return $this->render('leader/index.html.twig', [
-            'leaders' => "blurg",
+            'leaders' => $leadersData,
         ]);
     }
 

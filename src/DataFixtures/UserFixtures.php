@@ -19,7 +19,7 @@ class UserFixtures extends Fixture
         $user2 = new User();
         $user2->setUsername('Peyo');
         $user2->setPassword('$2y$13$FbIayaczYNJ5o.86VewU3uJ1l..wfDpOuZ.uFD6Y2qhw5IJ0W5Gea');
-        $user2->setLocale('fr');
+        $user2->setLocale('en');
         $manager->persist($user2);
         $manager->flush();
 
