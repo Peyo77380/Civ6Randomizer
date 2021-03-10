@@ -24,13 +24,13 @@ class LeaderTranslateRepository extends ServiceEntityRepository
     /**
      * @return LeaderTranslate from Leaders ID and Language
      */
-    public function findOneByLanguage(Leader $leader, string $languageIso): ?LeaderTranslate
+    public function findOneByLanguage(Leader $leader, Language $language): ?LeaderTranslate
     {
         return $this->createQueryBuilder('l')
             ->andWhere('l.leader = :leader')
             ->andWhere('l.language = :language')
             ->setParameter('leader', $leader)
-            ->setParameter('language', $languageIso)
+            ->setParameter('language', $language)
             ->getQuery()
 
             ->getOneOrNullResult()

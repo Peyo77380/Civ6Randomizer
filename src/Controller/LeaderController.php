@@ -30,25 +30,26 @@ class LeaderController extends AbstractController
      * @param LeaderRepository $leaderRepository
      * @return Response
      */
-    public function index(LeaderRepository $leaderRepository, LeaderTranslateRepository $leaderTranslateRepository): Response
+    public function index(LeaderRepository $leaderRepository, LanguageRepository $languageRepository): Response
     {
         $leadersData = [];
         $leaders = $leaderRepository->findAll();
 
-        // 80 is the id for russian
-        // TODO : change it to get the real user language's Id
-        $userLanguage = '79';
+        $userLanguage = $this->getUser()->getLocale();
+        $language = $languageRepository->findOneBy(['iso' => $userLanguage]);
+
 
         foreach ( $leaders as $leader ) {
             
             $translation = $this->getDoctrine()
                 ->getRepository(LeaderTranslate::class)
-                ->findOneByLanguage($leader, $userLanguage);
+                ->findOneByLanguage($leader, $language);
             
             $leadersData[$leader->getId()]['mainData'] = $leader ;
             $leadersData[$leader->getId()]['localData'] = $translation;
             
-        }
+        }   
+
 
 
         return $this->render('leader/index.html.twig', [
