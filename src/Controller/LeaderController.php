@@ -4,17 +4,17 @@ namespace App\Controller;
 
 use App\Entity\Leader;
 use App\Entity\LeaderTranslate;
+use App\Entity\Language;
 use App\Form\LeaderType;
 use App\Repository\GameRepository;
 use App\Repository\LanguageRepository;
 use App\Repository\LeaderRepository;
-use App\Repository\LeaderTranslateRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Bridge\Doctrine\ManagerRegistry;
 
 /**
  * Leader controller
@@ -30,27 +30,12 @@ class LeaderController extends AbstractController
      * @param LeaderRepository $leaderRepository
      * @return Response
      */
-    public function index(LeaderRepository $leaderRepository, LanguageRepository $languageRepository): Response
+    public function index(LeaderRepository $leaderRepository): Response
     {
         $leadersData = [];
         $leaders = $leaderRepository->findAll();
 
-        $userLanguage = $this->getUser()->getLocale();
-        $language = $languageRepository->findOneBy(['iso' => $userLanguage]);
-
-
-        foreach ( $leaders as $leader ) {
-            
-            $translation = $this->getDoctrine()
-                ->getRepository(LeaderTranslate::class)
-                ->findOneByLanguage($leader, $language);
-            
-            $leadersData[$leader->getId()]['mainData'] = $leader ;
-            $leadersData[$leader->getId()]['localData'] = $translation;
-            
-        }   
-
-
+        $leadersData = $this->getLeadersTranslations($leaders);
 
         return $this->render('leader/index.html.twig', [
             'leaders' => $leadersData,
@@ -71,6 +56,8 @@ class LeaderController extends AbstractController
         shuffle($leaders);
         $mainLeader = array_shift($leaders);
         $otherleaders = array_slice($leaders, 0, 3);
+
+        dd($mainLeader);
         return $this->render('leader/random.html.twig', [
             'random_leader' => $mainLeader,
             'leaders' => $otherleaders,
@@ -205,5 +192,40 @@ class LeaderController extends AbstractController
         return $leaders;
     }
 
+    /**
+     * Get the translations of name and country for each leader in array
+     *
+     * @param array $leaders
+     * @return void
+     */
+    private function getLeadersTranslations(array $leaders) {
+        
+
+        // get user language from string in user's table
+        // TODO : need to be updated once the user table implements the language as a foreign key
+        $userLanguage = $this->getUser()->getLocale();
+        dump($userLanguage);
+        
+        $language = $this->getDoctrine()
+            ->getRepository(Language::class)
+            ->findOneBy(['iso' => $userLanguage]);
+
+        dump($language);
+
+
+
+        foreach ( $leaders as $leader ) {
+            
+            $translation = $this->getDoctrine()
+                ->getRepository(LeaderTranslate::class)
+                ->findOneByLanguage($leader, $language);
+            
+            $leadersData[$leader->getId()]['mainData'] = $leader ;
+            $leadersData[$leader->getId()]['localData'] = $translation;
+            
+        }   
+
+        dump($leadersData);
+    }
 
 }
