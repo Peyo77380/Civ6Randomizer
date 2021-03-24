@@ -53,12 +53,16 @@ class LeaderController extends AbstractController
         $leaders = $this->getRandomLeaders($leaderRepository);
         shuffle($leaders);
         $mainLeader = array_shift($leaders);
-        $otherleaders = array_slice($leaders, 0, 3);
+        $otherLeaders = array_slice($leaders, 0, 3);
 
-        dd($mainLeader);
+        $mainLeader = $this->getLeaderTranslations($mainLeader);
+        
+        $otherLeaders = $this->getLeadersTranslations($otherLeaders);
+        dump($mainLeader);
+        dump($otherLeaders);
         return $this->render('leader/random.html.twig', [
             'random_leader' => $mainLeader,
-            'leaders' => $otherleaders,
+            'leaders' => $otherLeaders,
         ]);
     }
 
@@ -188,6 +192,34 @@ class LeaderController extends AbstractController
         }
 
         return $leaders;
+    }
+
+    /**
+     * Get the translations of name and country for a single leader
+     *
+     * @param array $leaders
+     * @return void
+     */
+    private function getLeaderTranslations(Leader $leader) {
+        
+
+        // get user language from string in user's table
+        // TODO : need to be updated once the user table implements the language as a foreign key
+        $userLanguage = $this->getUser()->getLocale();
+        
+        $language = $this->getDoctrine()
+            ->getRepository(Language::class)
+            ->findOneBy(['iso' => $userLanguage]);
+
+        $translation = $this->getDoctrine()
+            ->getRepository(LeaderTranslate::class)
+            ->findOneByLanguage($leader, $language);
+        
+        $leaderData['mainData'] = $leader ;
+        $leaderData['localData'] = $translation;
+
+        return $leaderData;
+
     }
 
     /**
