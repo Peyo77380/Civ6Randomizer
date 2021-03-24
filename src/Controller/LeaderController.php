@@ -7,14 +7,12 @@ use App\Entity\LeaderTranslate;
 use App\Entity\Language;
 use App\Form\LeaderType;
 use App\Repository\GameRepository;
-use App\Repository\LanguageRepository;
 use App\Repository\LeaderRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bridge\Doctrine\ManagerRegistry;
 
 /**
  * Leader controller
@@ -204,15 +202,10 @@ class LeaderController extends AbstractController
         // get user language from string in user's table
         // TODO : need to be updated once the user table implements the language as a foreign key
         $userLanguage = $this->getUser()->getLocale();
-        dump($userLanguage);
         
         $language = $this->getDoctrine()
             ->getRepository(Language::class)
             ->findOneBy(['iso' => $userLanguage]);
-
-        dump($language);
-
-
 
         foreach ( $leaders as $leader ) {
             
@@ -225,7 +218,7 @@ class LeaderController extends AbstractController
             
         }   
 
-        dump($leadersData);
+        return $leadersData;
     }
 
 }

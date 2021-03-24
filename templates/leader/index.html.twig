@@ -6,30 +6,32 @@
     <div class="container">
         <h1>{% trans %}All leaders{% endtrans %}</h1>
         <div class="card-columns">
-            {% for leader in leaders %}
+            {% if leaders %}
+                
+                {% for leader in leaders %}
+                    <div class="card">
+                        <img src="{{ asset('images/leaders/' ~ leader.mainData.image) }}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ leader.localData.name }}</h5>
+                            <p class="card-text">{{ leader.localData.country }}</p>
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    {% if leader.mainData.games|length > 0 %}
+                                        {% trans %}Number of games{% endtrans %}: {{ leader.mainData.games|length }}
+                                    {% endif %}
+                                </small>
 
-                <div class="card">
-                    <img src="{{ asset('images/leaders/' ~ leader.mainData.image) }}" class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ leader.localData.name }}</h5>
-                        <p class="card-text">{{ leader.localData.country }}</p>
-                        <p class="card-text">
-                            <small class="text-muted">
-                                {% if leader.mainData.games|length > 0 %}
-                                    {% trans %}Number of games{% endtrans %}: {{ leader.mainData.games|length }}
-                                {% endif %}
-                            </small>
-
-                        </p>
+                            </p>
+                        </div>
+                        <div class="card-footer">
+                            <a href="{{ path('leader_show', {'id': leader.mainData.id}) }}">{% trans %}show{% endtrans %}</a>
+                            <a href="{{ path('leader_edit', {'id': leader.mainData.id}) }}">{% trans %}edit{% endtrans %}</a>
+                        </div>
                     </div>
-                    <div class="card-footer">
-                        <a href="{{ path('leader_show', {'id': leader.mainData.id}) }}">{% trans %}show{% endtrans %}</a>
-                        <a href="{{ path('leader_edit', {'id': leader.mainData.id}) }}">{% trans %}edit{% endtrans %}</a>
-                    </div>
-                </div>
+                {% endfor %}
             {% else %}
                 no records found
-            {% endfor %}
+            {% endif %}
 
         </div>
         <a href="{{ path('leader_new') }}">{% trans %}Create new{% endtrans %}</a>
