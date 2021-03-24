@@ -10,13 +10,13 @@
             <div class="col-6">
                 <div class="card-group">
                     <div class="card">
-                        <img src="{{ asset('images/leaders/' ~ random_leader.mainData.image) }}" class="card-img-top">
+                        <img src="{{ asset('images/leaders/' ~ random_leader.image) }}" class="card-img-top">
                         <div class="card-body">
-                            <h5 class="card-title">{{ random_leader.localData.name }}</h5>
-                            <p class="card-text">{{ random_leader.localData.country }}</p>
+                            <h5 class="card-title">{{ random_leader.name }}</h5>
+                            <p class="card-text">{{ random_leader.country }}</p>
                         </div>
                         <div class="card-footer">
-                            <a href="{{ path('game_new_wf', {'leader_id': random_leader.mainData.id}) }}">{% trans %}Create game{% endtrans %}</a>
+                            <a href="{{ path('game_new_wf', {'leader_id': random_leader.id}) }}">{% trans %}Create game{% endtrans %}</a>
                         </div>
                     </div>
                 </div>
@@ -28,13 +28,13 @@
                 <div class="card-columns">
                     {% for leader in leaders %}
                         <div class="card">
-                            <img src="{{ asset('images/leaders/' ~ leader.mainData.image) }}" class="card-img-top">
+                            <img src="{{ asset('images/leaders/' ~ leader.image) }}" class="card-img-top">
                             <div class="card-body">
-                                <h5 class="card-title">{{ leader.localData.name }}</h5>
-                                <p class="card-text">{{ leader.localData.country }}</p>
+                                <h5 class="card-title">{{ leader.name }}</h5>
+                                <p class="card-text">{{ leader.country }}</p>
                             </div>
                             <div class="card-footer">
-                                <a href="{{ path('game_new_wf', {'leader_id': leader.mainData.id}) }}">{% trans %}Create game{% endtrans %}</a>
+                                <a href="{{ path('game_new_wf', {'leader_id': leader.id}) }}">{% trans %}Create game{% endtrans %}</a>
                             </div>
                         </div>
                     {% else %}

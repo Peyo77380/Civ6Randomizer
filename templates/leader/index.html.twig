@@ -10,22 +10,22 @@
                 
                 {% for leader in leaders %}
                     <div class="card">
-                        <img src="{{ asset('images/leaders/' ~ leader.mainData.image) }}" class="card-img-top" alt="...">
+                        <img src="{{ asset('images/leaders/' ~ leader.image) }}" class="card-img-top" alt="...">
                         <div class="card-body">
-                            <h5 class="card-title">{{ leader.localData.name }}</h5>
-                            <p class="card-text">{{ leader.localData.country }}</p>
+                            <h5 class="card-title">{{ leader.name }}</h5>
+                            <p class="card-text">{{ leader.country }}</p>
                             <p class="card-text">
                                 <small class="text-muted">
-                                    {% if leader.mainData.games|length > 0 %}
-                                        {% trans %}Number of games{% endtrans %}: {{ leader.mainData.games|length }}
+                                    {% if leader.games|length > 0 %}
+                                        {% trans %}Number of games{% endtrans %}: {{ leader.games|length }}
                                     {% endif %}
                                 </small>
 
                             </p>
                         </div>
                         <div class="card-footer">
-                            <a href="{{ path('leader_show', {'id': leader.mainData.id}) }}">{% trans %}show{% endtrans %}</a>
-                            <a href="{{ path('leader_edit', {'id': leader.mainData.id}) }}">{% trans %}edit{% endtrans %}</a>
+                            <a href="{{ path('leader_show', {'id': leader.id}) }}">{% trans %}show{% endtrans %}</a>
+                            <a href="{{ path('leader_edit', {'id': leader.id}) }}">{% trans %}edit{% endtrans %}</a>
                         </div>
                     </div>
                 {% endfor %}

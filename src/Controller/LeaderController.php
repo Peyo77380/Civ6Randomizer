@@ -215,8 +215,9 @@ class LeaderController extends AbstractController
             ->getRepository(LeaderTranslate::class)
             ->findOneByLanguage($leader, $language);
         
-        $leaderData['mainData'] = $leader ;
-        $leaderData['localData'] = $translation;
+        $leaderData = $leader ;
+        $leaderData->name = $translation->getName();
+        $leaderData->country = $translation->getCountry();
 
         return $leaderData;
 
@@ -230,25 +231,11 @@ class LeaderController extends AbstractController
      */
     private function getLeadersTranslations(array $leaders) {
         
-
-        // get user language from string in user's table
-        // TODO : need to be updated once the user table implements the language as a foreign key
-        $userLanguage = $this->getUser()->getLocale();
-        
-        $language = $this->getDoctrine()
-            ->getRepository(Language::class)
-            ->findOneBy(['iso' => $userLanguage]);
-
         foreach ( $leaders as $leader ) {
             
-            $translation = $this->getDoctrine()
-                ->getRepository(LeaderTranslate::class)
-                ->findOneByLanguage($leader, $language);
+            $leadersData[] = $this->getLeaderTranslations($leader);
             
-            $leadersData[$leader->getId()]['mainData'] = $leader ;
-            $leadersData[$leader->getId()]['localData'] = $translation;
-            
-        }   
+        }
 
         return $leadersData;
     }
