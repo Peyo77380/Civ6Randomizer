@@ -58,8 +58,7 @@ class LeaderController extends AbstractController
         $mainLeader = $this->getLeaderTranslations($mainLeader);
         
         $otherLeaders = $this->getLeadersTranslations($otherLeaders);
-        dump($mainLeader);
-        dump($otherLeaders);
+        
         return $this->render('leader/random.html.twig', [
             'random_leader' => $mainLeader,
             'leaders' => $otherLeaders,
