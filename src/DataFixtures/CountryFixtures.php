@@ -8,15 +8,15 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 
 class CountryFixtures extends Fixture
 {
-    const LANGUAGES = ['RU', 'EN', 'FR'];
+    const COUNTRIES = ['RUS', 'GBR', 'FRA'];
 
     public function load(ObjectManager $manager)
     {
         // $product = new Product();
         // $manager->persist($product);
-        foreach (self::LANGUAGES as $lang) {
+        foreach (self::COUNTRIES as $lang) {
             $country = new Country();
-            $country->setIso($lang);
+            $country->setIso($lang); 
             $manager->persist($country);
         }
 
