@@ -41,6 +41,7 @@ class Language
     public function __construct()
     {
         $this->leaderTranslates = new ArrayCollection();
+        
     }
 
     public function getId(): ?int
@@ -101,4 +102,6 @@ class Language
 
         return $this;
     }
+
+    
 }

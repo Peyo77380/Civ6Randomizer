@@ -210,6 +210,7 @@ class LeaderController extends AbstractController
             ->getRepository(Language::class)
             ->findOneBy(['iso' => $userLanguage]);
 
+
         $translation = $this->getDoctrine()
             ->getRepository(LeaderTranslate::class)
             ->findOneByLanguage($leader, $language);

@@ -2,13 +2,18 @@
 
 namespace App\Entity;
 
-use App\Repository\LeaderTranslateRepository;
+use App\Entity\LeaderTranslate;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\LeaderTranslateRepository;
 
 /**
+ * @ORM\MappedSuperclass
+ * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\Entity(repositoryClass=LeaderTranslateRepository::class)
+ * @ORM\DiscriminatorColumn(name="dataType", type="integer")
+ * @ORM\DiscriminatorMap({"1" = "LeaderTranslateName", "2" = "LeaderTranslateCountry"})
  */
-class LeaderTranslate
+abstract class LeaderTranslate
 {
     /**
      * @ORM\Id
@@ -18,20 +23,9 @@ class LeaderTranslate
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="integer")
      */
-    private $name;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $country;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Leader::class, inversedBy="leaderTranslates")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $leader;
+    private $dataType;
 
     /**
      * @ORM\ManyToOne(targetEntity=Language::class, inversedBy="leaderTranslates")
@@ -44,41 +38,6 @@ class LeaderTranslate
         return $this->id;
     }
 
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    public function getCountry(): ?string
-    {
-        return $this->country;
-    }
-
-    public function setCountry(string $country): self
-    {
-        $this->country = $country;
-
-        return $this;
-    }
-
-    public function getLeader(): ?Leader
-    {
-        return $this->leader;
-    }
-
-    public function setLeader(?Leader $leader): self
-    {
-        $this->leader = $leader;
-
-        return $this;
-    }
 
     public function getLanguage(): ?Language
     {
@@ -88,6 +47,71 @@ class LeaderTranslate
     public function setLanguage(?Language $language): self
     {
         $this->language = $language;
+
+        return $this;
+    }
+    
+
+    public function getDataType(): ?Language
+    {
+        return $this->type;
+    }
+
+    public function setDataType(?Language $type): self
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+
+}
+
+/**
+ * @ORM\Entity(repositoryClass=LeaderTranslateNameRepository::class)
+ */
+class LeaderTranslateName extends LeaderTranslate
+{
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Leader::class, inversedBy="leaderTranslates")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $translation;
+
+    public function getTranslation(): ?Leader
+    {
+        return $this->translation;
+    } 
+
+    public function setTranslation(?Leader $translation): self
+    {
+        $this->translation = $translation;
+
+        return $this;
+    }
+
+}
+
+/**
+ * @ORM\Entity(repositoryClass=LeaderTranslateCountryRepository::class)
+ */
+class LeaderTranslateCountry extends LeaderTranslate
+{
+    /**
+     * @ORM\ManyToOne(targetEntity=Country::class, inversedBy="leaderTranslates")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $translation;
+
+    public function getTranslation(): ?Country
+    {
+        return $this->translation;
+    }
+
+    public function setTranslation(?Country $translation): self
+    {
+        $this->translation = $translation;
 
         return $this;
     }
