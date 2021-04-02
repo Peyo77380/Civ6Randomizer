@@ -33,6 +33,11 @@ abstract class LeaderTranslate
      */
     private $language;
 
+    /**
+     * @ORM\Column(type="string")
+     */
+    private $translation;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -52,14 +57,28 @@ abstract class LeaderTranslate
     }
     
 
-    public function getDataType(): ?Language
+    public function getDataType(): ?int
     {
         return $this->type;
     }
 
-    public function setDataType(?Language $type): self
+    public function setDataType(?int $type): self
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+
+
+    public function getTranslation(): ?string
+    {
+        return $this->translation;
+    } 
+
+    public function setTranslation(?string $translation): self
+    {
+        $this->translation = $translation;
 
         return $this;
     }
@@ -77,16 +96,16 @@ class LeaderTranslateName extends LeaderTranslate
      * @ORM\ManyToOne(targetEntity=Leader::class, inversedBy="leaderTranslates")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $translation;
+    private $leader;
 
-    public function getTranslation(): ?Leader
+    public function getLeader(): ?Leader
     {
-        return $this->translation;
+        return $this->leader;
     } 
 
-    public function setTranslation(?Leader $translation): self
+    public function setLeader(?Leader $leader): self
     {
-        $this->translation = $translation;
+        $this->leader = $leader;
 
         return $this;
     }
@@ -102,16 +121,16 @@ class LeaderTranslateCountry extends LeaderTranslate
      * @ORM\ManyToOne(targetEntity=Country::class, inversedBy="leaderTranslates")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $translation;
+    private $country;
 
-    public function getTranslation(): ?Country
+    public function getCountry(): ?Country
     {
-        return $this->translation;
+        return $this->country;
     }
 
-    public function setTranslation(?Country $translation): self
+    public function setCountry(?Country $country): self
     {
-        $this->translation = $translation;
+        $this->country = $country;
 
         return $this;
     }
