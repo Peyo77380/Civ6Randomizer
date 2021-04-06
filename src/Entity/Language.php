@@ -34,13 +34,14 @@ class Language
     private $iso;
 
     /**
-     * @ORM\OneToMany(targetEntity=LeaderTranslate::class, mappedBy="language", orphanRemoval=true)
+     * @ORM\ManyToMany(targetEntity=Localization::class, mappedBy="language")
      */
-    private $leaderTranslates;
+    private $localizations;
 
     public function __construct()
     {
         $this->leaderTranslates = new ArrayCollection();
+        $this->localizations = new ArrayCollection();
         
     }
 
@@ -74,30 +75,27 @@ class Language
     }
 
     /**
-     * @return Collection|LeaderTranslate[]
+     * @return Collection|Localization[]
      */
-    public function getLeaderTranslates(): Collection
+    public function getLocalizations(): Collection
     {
-        return $this->leaderTranslates;
+        return $this->localizations;
     }
 
-    public function addLeaderTranslate(LeaderTranslate $leaderTranslate): self
+    public function addLocalization(Localization $localization): self
     {
-        if (!$this->leaderTranslates->contains($leaderTranslate)) {
-            $this->leaderTranslates[] = $leaderTranslate;
-            $leaderTranslate->setLanguage($this);
+        if (!$this->localizations->contains($localization)) {
+            $this->localizations[] = $localization;
+            $localization->addLanguage($this);
         }
 
         return $this;
     }
 
-    public function removeLeaderTranslate(LeaderTranslate $leaderTranslate): self
+    public function removeLocalization(Localization $localization): self
     {
-        if ($this->leaderTranslates->removeElement($leaderTranslate)) {
-            // set the owning side to null (unless already changed)
-            if ($leaderTranslate->getLanguage() === $this) {
-                $leaderTranslate->setLanguage(null);
-            }
+        if ($this->localizations->removeElement($localization)) {
+            $localization->removeLanguage($this);
         }
 
         return $this;
