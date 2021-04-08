@@ -14,7 +14,7 @@ class LeaderTranslateName extends Localization
     
     /**
      * @ORM\ManyToOne(targetEntity=Leader::class, inversedBy="leaderTranslateNames")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $leader;
 

@@ -13,7 +13,7 @@ class CountryTranslate extends Localization
 {
     /**
      * @ORM\ManyToOne(targetEntity=Country::class, inversedBy="countryTranslates")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $country;
 
