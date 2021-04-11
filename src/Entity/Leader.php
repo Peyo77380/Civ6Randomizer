@@ -39,11 +39,17 @@ class Leader
      */
     private $leaderTranslateNames;
 
+    /**
+     * @ORM\OneToMany(targetEntity=LeaderTranslateCountry::class, mappedBy="country")
+     */
+    private $leaderTranslateCountries;
+
     public function __construct()
     {
         $this->games = new ArrayCollection();
         $this->leaderTranslates = new ArrayCollection();
         $this->leaderTranslateNames = new ArrayCollection();
+        $this->leaderTranslateCountries = new ArrayCollection();
     }
 
 
@@ -143,6 +149,36 @@ class Leader
             // set the owning side to null (unless already changed)
             if ($leaderTranslateName->getLeader() === $this) {
                 $leaderTranslateName->setLeader(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|LeaderTranslateCountry[]
+     */
+    public function getLeaderTranslateCountries(): Collection
+    {
+        return $this->leaderTranslateCountries;
+    }
+
+    public function addLeaderTranslateCountry(LeaderTranslateCountry $leaderTranslateCountry): self
+    {
+        if (!$this->leaderTranslateCountries->contains($leaderTranslateCountry)) {
+            $this->leaderTranslateCountries[] = $leaderTranslateCountry;
+            $leaderTranslateCountry->setCountry($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLeaderTranslateCountry(LeaderTranslateCountry $leaderTranslateCountry): self
+    {
+        if ($this->leaderTranslateCountries->removeElement($leaderTranslateCountry)) {
+            // set the owning side to null (unless already changed)
+            if ($leaderTranslateCountry->getCountry() === $this) {
+                $leaderTranslateCountry->setCountry(null);
             }
         }
 

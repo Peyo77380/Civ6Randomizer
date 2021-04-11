@@ -4,7 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Leader;
 use App\DataFixtures\LanguageFixtures;
-use App\Entity\CountryTranslate;
+use App\Entity\LeaderTranslateCountry;
 use App\Entity\LeaderTranslateName;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -106,15 +106,14 @@ class LeaderFixtures extends Fixture implements DependentFixtureInterface
               $leaderTranslateName->setTranslation($head['name'][$lang['iso']]);
 
               $manager->persist($leaderTranslateName);
-/*
-              $countryTranslate = new CountryTranslate();
 
-              $countryTranslate->setCountry($leader);
-              $leaderTranslateName->addLanguage($lang['ref']);
+              $countryTranslate = new LeaderTranslateCountry();
+
+              $countryTranslate->setLeaderCountry($leader);
+              $countryTranslate->addLanguage($lang['ref']);
               $countryTranslate->setTranslation($head['country'][$lang['iso']]);
-              
-              */
-
+      
+              $manager->persist($countryTranslate);
               
             }
            
