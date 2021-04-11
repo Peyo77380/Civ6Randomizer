@@ -16,15 +16,16 @@ class LeaderTranslateCountry extends Localization
      * @ORM\ManyToOne(targetEntity=Leader::class, inversedBy="leaderTranslateCountries")
      * @ORM\JoinColumn(nullable=true)
      */
-    private $leaderCountry;
+    private $leader;
 
-    public function getLeaderCountry(): ?Leader
+    public function getLeader(): ?Leader
     {
-        return $this->leaderCountry;
+        return $this->leader;
     }
 
-    public function setLeaderCountry(?Leader $leaderCountry): self
-        $this->leaderCountry = $leaderCountry;
+    public function setLeader(?Leader $leader): self
+    {
+        $this->leader = $leader;
 
         return $this;
     }

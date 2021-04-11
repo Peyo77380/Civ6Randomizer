@@ -109,7 +109,7 @@ class LeaderFixtures extends Fixture implements DependentFixtureInterface
 
               $countryTranslate = new LeaderTranslateCountry();
 
-              $countryTranslate->setLeaderCountry($leader);
+              $countryTranslate->setLeader($leader);
               $countryTranslate->addLanguage($lang['ref']);
               $countryTranslate->setTranslation($head['country'][$lang['iso']]);
       

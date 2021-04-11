@@ -42,7 +42,7 @@ class CountryFixtures extends Fixture implements DependentFixtureInterface
           'ref' => $this->getReference(LanguageFixtures::LANG_FR_REFERENCE)
         ];
 
-        foreach (CountryFixtures::COUNTRIES as $iso) {
+        foreach (CountryFixtures::COUNTRIES as $iso => $data) {
             $country = new Country();
             $country->setIso($iso); 
 
@@ -53,7 +53,7 @@ class CountryFixtures extends Fixture implements DependentFixtureInterface
                 $translation = new CountryTranslate();
                 $translation->addLanguage($lang['ref']);
                 $translation->setCountry($country);
-                $translation->setTranslation($lang[$ref['iso']]);
+                $translation->setTranslation($data[$lang['ref']->getIso()]);
                 $manager->persist($translation);
 
             }
