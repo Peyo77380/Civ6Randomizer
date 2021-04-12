@@ -2,9 +2,10 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\LeaderTranslateName;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\LeaderRepository")
@@ -34,14 +35,21 @@ class Leader
     private $gamesCount;
 
     /**
-     * @ORM\OneToMany(targetEntity=LeaderTranslate::class, mappedBy="leader", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=LeaderTranslateName::class, mappedBy="leader", orphanRemoval=true)
      */
-    private $leaderTranslates;
+    private $leaderTranslateNames;
+
+    /**
+     * @ORM\OneToMany(targetEntity=LeaderTranslateCountry::class, mappedBy="country")
+     */
+    private $leaderTranslateCountries;
 
     public function __construct()
     {
         $this->games = new ArrayCollection();
         $this->leaderTranslates = new ArrayCollection();
+        $this->leaderTranslateNames = new ArrayCollection();
+        $this->leaderTranslateCountries = new ArrayCollection();
     }
 
 
@@ -118,29 +126,59 @@ class Leader
     }
 
     /**
-     * @return Collection|LeaderTranslate[]
+     * @return Collection|LeaderTranslateName[]
      */
-    public function getLeaderTranslates(): Collection
+    public function getLeaderTranslateNames(): Collection
     {
-        return $this->leaderTranslates;
+        return $this->leaderTranslateNames;
     }
 
-    public function addLeaderTranslate(LeaderTranslate $leaderTranslate): self
+    public function addLeaderTranslateName(LeaderTranslateName $leaderTranslateName): self
     {
-        if (!$this->leaderTranslates->contains($leaderTranslate)) {
-            $this->leaderTranslates[] = $leaderTranslate;
-            $leaderTranslate->setLeader($this);
+        if (!$this->leaderTranslateNames->contains($leaderTranslateName)) {
+            $this->leaderTranslateNames[] = $leaderTranslateName;
+            $leaderTranslateName->setLeader($this);
         }
 
         return $this;
     }
 
-    public function removeLeaderTranslate(LeaderTranslate $leaderTranslate): self
+    public function removeLeaderTranslateName(LeaderTranslateName $leaderTranslateName): self
     {
-        if ($this->leaderTranslates->removeElement($leaderTranslate)) {
+        if ($this->leaderTranslateNames->removeElement($leaderTranslateName)) {
             // set the owning side to null (unless already changed)
-            if ($leaderTranslate->getLeader() === $this) {
-                $leaderTranslate->setLeader(null);
+            if ($leaderTranslateName->getLeader() === $this) {
+                $leaderTranslateName->setLeader(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|LeaderTranslateCountry[]
+     */
+    public function getLeaderTranslateCountries(): Collection
+    {
+        return $this->leaderTranslateCountries;
+    }
+
+    public function addLeaderTranslateCountry(LeaderTranslateCountry $leaderTranslateCountry): self
+    {
+        if (!$this->leaderTranslateCountries->contains($leaderTranslateCountry)) {
+            $this->leaderTranslateCountries[] = $leaderTranslateCountry;
+            $leaderTranslateCountry->setLeader($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLeaderTranslateCountry(LeaderTranslateCountry $leaderTranslateCountry): self
+    {
+        if ($this->leaderTranslateCountries->removeElement($leaderTranslateCountry)) {
+            // set the owning side to null (unless already changed)
+            if ($leaderTranslateCountry->getLeader() === $this) {
+                $leaderTranslateCountry->setLeader(null);
             }
         }
 
