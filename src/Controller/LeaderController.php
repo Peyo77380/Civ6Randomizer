@@ -3,16 +3,20 @@
 namespace App\Controller;
 
 use App\Entity\Leader;
-use App\Entity\LeaderTranslate;
 use App\Entity\Language;
 use App\Form\LeaderType;
+use App\Entity\Localization;
 use App\Repository\GameRepository;
+use App\Entity\LeaderTranslateName;
 use App\Repository\LeaderRepository;
+use App\Entity\LeaderTranslateCountry;
+use App\Repository\LocalizationRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * Leader controller
@@ -126,6 +130,9 @@ class LeaderController extends AbstractController
      */
     public function show(Leader $leader): Response
     {
+        $leader = $this->getLeaderTranslations($leader);
+        
+        
         return $this->render('leader/show.html.twig', [
             'leader' => $leader,
         ]);
@@ -140,6 +147,8 @@ class LeaderController extends AbstractController
      */
     public function edit(Request $request, Leader $leader): Response
     {
+        $leader = $this->getLeaderTranslations($leader);
+        
         $form = $this->createForm(LeaderType::class, $leader);
         $form->handleRequest($request);
 
@@ -199,7 +208,8 @@ class LeaderController extends AbstractController
      * @param array $leaders
      * @return void
      */
-    private function getLeaderTranslations(Leader $leader) {
+    private function getLeaderTranslations(Leader $leader) 
+    {
         
 
         // get user language from string in user's table
@@ -210,14 +220,24 @@ class LeaderController extends AbstractController
             ->getRepository(Language::class)
             ->findOneBy(['iso' => $userLanguage]);
 
-
-        $translation = $this->getDoctrine()
-            ->getRepository(LeaderTranslate::class)
-            ->findOneByLanguage($leader, $language);
+        $name = $this->getDoctrine()
+            ->getRepository(LeaderTranslateName::class)
+            ->findOneBy([
+                'leader' => $leader,
+                'language' => $language
+            ]);
+            
+        $country = $this->getDoctrine()
+                ->getRepository(LeaderTranslateCountry::class)
+                ->findOneBy([
+                    'leader' => $leader,
+                    'language' => $language
+                ]);
         
+
         $leaderData = $leader ;
-        $leaderData->name = $translation->getName();
-        $leaderData->country = $translation->getCountry();
+        $leaderData->name = $name->getTranslation();
+        $leaderData->country = $country->getTranslation();
 
         return $leaderData;
 

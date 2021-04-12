@@ -2,9 +2,12 @@
 
 namespace App\Repository;
 
+use App\Entity\Leader;
+use App\Entity\Language;
 use App\Entity\LeaderTranslateName;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Entity\Localization;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method LeaderTranslateName|null find($id, $lockMode = null, $lockVersion = null)

@@ -34,7 +34,7 @@ class Language
     private $iso;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Localization::class, mappedBy="language")
+     * @ORM\OneToMany(targetEntity=Localization::class, mappedBy="language")
      */
     private $localizations;
 

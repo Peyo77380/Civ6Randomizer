@@ -51,7 +51,7 @@ class CountryFixtures extends Fixture implements DependentFixtureInterface
             foreach($ref as $lang) {
 
                 $translation = new CountryTranslate();
-                $translation->addLanguage($lang['ref']);
+                $translation->setLanguage($lang['ref']);
                 $translation->setCountry($country);
                 $translation->setTranslation($data[$lang['ref']->getIso()]);
                 $manager->persist($translation);

@@ -22,7 +22,7 @@ class Localization
     private $id;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Language::class, inversedBy="localizations")
+     * @ORM\ManyToOne(targetEntity=Language::class, inversedBy="localizations")
      */
     private $language;
 
@@ -41,29 +41,19 @@ class Localization
         return $this->id;
     }
 
-    /**
-     * @return Collection|Language[]
-     */
-    public function getLanguage(): Collection
+    public function getLanguage(): ?Language
     {
         return $this->language;
     }
 
-    public function addLanguage(Language $language): self
+    public function setLanguage(?Language $language): self
     {
-        if (!$this->language->contains($language)) {
-            $this->language[] = $language;
-        }
-
+        $this->language = $language;
+        
+ 
         return $this;
     }
 
-    public function removeLanguage(Language $language): self
-    {
-        $this->language->removeElement($language);
-
-        return $this;
-    }
 
     public function getTranslation(): ?string
     {
@@ -76,4 +66,5 @@ class Localization
 
         return $this;
     }
+
 }

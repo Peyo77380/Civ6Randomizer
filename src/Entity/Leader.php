@@ -167,7 +167,7 @@ class Leader
     {
         if (!$this->leaderTranslateCountries->contains($leaderTranslateCountry)) {
             $this->leaderTranslateCountries[] = $leaderTranslateCountry;
-            $leaderTranslateCountry->setCountry($this);
+            $leaderTranslateCountry->setLeader($this);
         }
 
         return $this;
@@ -177,8 +177,8 @@ class Leader
     {
         if ($this->leaderTranslateCountries->removeElement($leaderTranslateCountry)) {
             // set the owning side to null (unless already changed)
-            if ($leaderTranslateCountry->getCountry() === $this) {
-                $leaderTranslateCountry->setCountry(null);
+            if ($leaderTranslateCountry->getLeader() === $this) {
+                $leaderTranslateCountry->setLeader(null);
             }
         }
 
