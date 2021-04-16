@@ -62,6 +62,19 @@ class LeaderRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
+    /**
+     * @return mixed
+     */
+    public function getLeadersWithGames()
+    {
+        return $this->createQueryBuilder('l')
+            ->leftJoin('l.games', 'g')
+            ->addSelect('g')
+            ->orderBy('l.country', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
     // /**
     //  * @return Leader[] Returns an array of Leader objects
     //  */
