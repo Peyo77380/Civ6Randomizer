@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Common\Collections\ArrayCollection;
+use Locale;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
@@ -25,6 +26,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  */
 class LeaderController extends AbstractController
 {
+    public $lang;
+
     /**
      * Main page
      *
@@ -32,8 +35,9 @@ class LeaderController extends AbstractController
      * @param LeaderRepository $leaderRepository
      * @return Response
      */
-    public function index(LeaderRepository $leaderRepository): Response
+    public function index(Request $request, LeaderRepository $leaderRepository): Response
     {
+        $this->lang = $request->getLocale();
         $leadersData = [];
         $leaders = $leaderRepository->findAll();
 
@@ -52,8 +56,9 @@ class LeaderController extends AbstractController
      * @return Response
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function random(LeaderRepository $leaderRepository): Response
+    public function random(Request $request, LeaderRepository $leaderRepository): Response
     {
+        $this->lang = $request->getLocale();
         $leaders = $this->getRandomLeaders($leaderRepository);
         shuffle($leaders);
         $mainLeader = array_shift($leaders);
@@ -77,8 +82,10 @@ class LeaderController extends AbstractController
      * @param LeaderRepository $leaderRepository
      * @return Response
      */
-    public function setLeaderGameCount(LeaderRepository $leaderRepository, GameRepository $gameRepository, EntityManagerInterface $entityManager)
+    public function setLeaderGameCount(Request $request, LeaderRepository $leaderRepository, GameRepository $gameRepository, EntityManagerInterface $entityManager)
     {
+        $this->lang = $request->getLocale();
+
         $leaders = $leaderRepository->findAll();
         if(!$leaders) {
             return $this->redirect('leader_index');
@@ -104,6 +111,8 @@ class LeaderController extends AbstractController
      */
     public function new(Request $request): Response
     {
+        $this->lang = $request->getLocale();
+
         $leader = new Leader();
         $form = $this->createForm(LeaderType::class, $leader);
         $form->handleRequest($request);
@@ -128,10 +137,11 @@ class LeaderController extends AbstractController
      * @param Leader $leader
      * @return Response
      */
-    public function show(Leader $leader): Response
+    public function show(Request $request, Leader $leader): Response
     {
-        $leader = $this->getLeaderTranslations($leader);
+        $this->lang = $request->getLocale();
         
+        $leader = $this->getLeaderTranslations($leader);
         
         return $this->render('leader/show.html.twig', [
             'leader' => $leader,
@@ -147,6 +157,8 @@ class LeaderController extends AbstractController
      */
     public function edit(Request $request, Leader $leader): Response
     {
+        $this->lang = $request->getLocale();
+
         $leader = $this->getLeaderTranslations($leader);
         
         $form = $this->createForm(LeaderType::class, $leader);
@@ -210,15 +222,11 @@ class LeaderController extends AbstractController
      */
     private function getLeaderTranslations(Leader $leader) 
     {
-        
-
         // get user language from string in user's table
         // TODO : need to be updated once the user table implements the language as a foreign key
-        $userLanguage = $this->getUser()->getLocale();
-        
         $language = $this->getDoctrine()
             ->getRepository(Language::class)
-            ->findOneBy(['iso' => $userLanguage]);
+            ->findOneBy(['iso' => $this->lang]);
 
         $name = $this->getDoctrine()
             ->getRepository(LeaderTranslateName::class)
